@@ -1,0 +1,175 @@
+imports:
+  - { resource: ./common.yml }
+
+services:
+
+  # Grid services
+  #Item
+  prestashop.module.kj_cutsommenu.grid.definition.factory.items:
+    class: 'PrestaShop\Module\CustomMenu\Grid\Definition\Factory\CustomMenuDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+
+  prestashop.module.kj_cutsommenu.grid.query_builder.item:
+    class: 'PrestaShop\Module\CustomMenu\Grid\Query\ItemQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+
+  prestashop.module.kj_cutsommenu.grid.data_provider.items:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.grid.query_builder.item'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'item'
+
+  prestashop.module.kj_cutsommenu.grid.factory.items:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.grid.definition.factory.items'
+      - '@prestashop.module.kj_cutsommenu.grid.data_provider.items'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  #block
+  prestashop.module.kj_cutsommenu.grid.definition.factory.blocks:
+    class: 'PrestaShop\Module\CustomMenu\Grid\Definition\Factory\MenuBlockDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+
+  prestashop.module.kj_cutsommenu.grid.query_builder.blocks:
+    class: 'PrestaShop\Module\CustomMenu\Grid\Query\BlockQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+
+  prestashop.module.kj_cutsommenu.grid.data_provider.blocks:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.grid.query_builder.blocks'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'block'
+
+  prestashop.module.kj_cutsommenu.grid.factory.blocks:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.grid.definition.factory.blocks'
+      - '@prestashop.module.kj_cutsommenu.grid.data_provider.blocks'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+#Repository
+  prestashop.module.kj_cutsommenu.repository.menu_link_repository:
+    class: PrestaShop\Module\CustomMenu\Repository\MenuLinkRepository
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShop\Module\CustomMenu\Entity\MenuLink
+
+  prestashop.module.kj_cutsommenu.repository.menu_block_repository:
+    class: PrestaShop\Module\CustomMenu\Repository\MenuBlockRepository
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShop\Module\CustomMenu\Entity\MenuBlock
+#Form
+  #Item
+  prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_item_form_data_provider:
+    class: 'PrestaShop\Module\CustomMenu\Form\MenuItemFormDataProvider'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.repository.menu_item_repository'
+
+  prestashop.module.kj_cutsommenu.form.identifiable_object.builder.menu_item_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShop\Module\CustomMenu\Form\MenuItemType'
+      - '@prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_item_form_data_provider'
+
+  prestashop.module.kj_cutsommenu.form.identifiable_object.data_handler.menu_item_form_data_handler:
+    class: 'PrestaShop\Module\CustomMenu\Form\MenuItemFormDataHandler'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.repository.menu_item_repository'
+      - '@doctrine.orm.default_entity_manager'
+
+  prestashop.module.kj_cutsommenu.form.identifiable_object.handler.menu_item_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.form.identifiable_object.data_handler.menu_item_form_data_handler'
+
+  #Link
+  prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_link_form_data_provider:
+    class: 'PrestaShop\Module\CustomMenu\Form\MenuLinkFormDataProvider'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.repository.menu_link_repository'
+
+  prestashop.module.kj_cutsommenu.form.identifiable_object.builder.menu_link_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShop\Module\CustomMenu\Form\MenuLinkType'
+      - '@prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_link_form_data_provider'
+
+  prestashop.module.kj_cutsommenu.form.identifiable_object.data_handler.menu_link_form_data_handler:
+    class: 'PrestaShop\Module\CustomMenu\Form\MenuLinkFormDataHandler'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.repository.menu_link_repository'
+      - '@doctrine.orm.default_entity_manager'
+
+  prestashop.module.kj_cutsommenu.form.identifiable_object.handler.menu_link_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.form.identifiable_object.data_handler.menu_link_form_data_handler'
+
+  #Block
+  prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_block_form_data_provider:
+    class: 'PrestaShop\Module\CustomMenu\Form\MenuBlockFormDataProvider'
+    arguments:
+      - '@prestashop.module.kj_cutsommenu.repository.menu_block_repository'
+
+  # Form types
+  prestashop.module.kj_cutsommenu.menu_item_type:
+    class: PrestaShop\Module\CustomMenu\Form\MenuItemType
+    public: true
+    arguments:
+      - '@=service("prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_link_form_data_provider").getAllData()'
+    tags:
+      - { name: form.type }
+
+  prestashop.module.kj_cutsommenu.menu_block_type:
+    class: PrestaShop\Module\CustomMenu\Form\MenuBlockType
+    public: true
+    arguments:
+      - '@=service("prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_block_form_data_provider").getAllParent()'
+    tags:
+      - { name: form.type }
+
+  prestashop.module.kj_cutsommenu.menu_block_link_type:
+    class: PrestaShop\Module\CustomMenu\Form\MenuBlockLinkType
+    public: true
+    arguments:
+      - '@=service("prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_link_form_data_provider").getAllData()'
+    tags:
+      - { name: form.type }
+
+  prestashop.module.kj_cutsommenu.menu_item_block_type:
+    class: PrestaShop\Module\CustomMenu\Form\MenuItemBlockType
+    public: true
+    arguments:
+      - '@=service("prestashop.module.kj_cutsommenu.form.identifiable_object.data_provider.menu_block_form_data_provider").getAllData()'
+    tags:
+      - { name: form.type }
+#générer des menu links
+  prestashop.module.kj_cutsommenu.links.generator:
+    class: 'PrestaShop\Module\CustomMenu\Database\MenuLinkIndexer'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@doctrine.orm.default_entity_manager'
+      - '@=service("prestashop.adapter.legacy.context").getContext().link'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'

@@ -1,0 +1,13 @@
+{
+    "name": "prestashop/kj_custommenu",
+
+    "autoload": {
+      "psr-4": {
+        "PrestaShop\\Module\\CustomMenu\\": "src/"
+      },
+      "config": {
+        "prepend-autoloader": false
+      },
+      "type": "prestashop-module"
+    }
+}

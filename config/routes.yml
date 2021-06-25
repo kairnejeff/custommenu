@@ -1,0 +1,73 @@
+kj_custommenu_item_index:
+  path: /kj_custom-menu/items
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuItemController::indexAction'
+    _legacy_controller: 'AdminCustomMenu'
+    _legacy_link: 'AdminCustomMenu'
+
+kj_custommenu_item_add_single:
+  path: /kj_custom-menu/items/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuItemController::addSingleAction'
+  requirements:
+    itemId: \d+
+
+kj_custommenu_item_edit:
+  path: /kj_custom-menu/items/{itemId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuItemController::editAction'
+  requirements:
+    itemId: \d+
+
+kj_custommenu_item_delete:
+  path: /kj_custom-menu/items/{itemId}/delete
+  methods: [GET,DELETE]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuItemController::deleteAction'
+  requirements:
+    itemId: \d+
+
+kj_custommenu_link_generate:
+  path: /kj_custom-menu/link/generate
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::generateAction'
+
+kj_custommenu_link_add:
+  path: /kj_custom-menu/link/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::addAction'
+
+kj_custommenu_block_add:
+  path: /kj_custom-menu/block/add
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuBlockController::addAction'
+
+kj_custommenu_block_edit:
+  path: /kj_custom-menu/block/{blockid}/edit
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuBlockController::editAction'
+  requirements:
+    blockid: \d+
+
+kj_custommenu_block_delete:
+  path: /kj_custom-menu/block/{blockid}/delete
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuBlockController::deleteAction'
+  requirements:
+    blockid: \d+
+
+kj_custommenu_block_index:
+  path: /kj_custom-menu/blocks
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuBlockController::indexAction'
+    _legacy_controller: 'AdminCustomMenu'
+    _legacy_link: 'AdminCustomMenu'

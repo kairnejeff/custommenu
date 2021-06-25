@@ -1,0 +1,6 @@
+services:
+    prestashop.module.kj_cutsommenu.repository.menu_item_repository:
+        class: PrestaShop\Module\CustomMenu\Repository\MenuItemRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShop\Module\CustomMenu\Entity\MenuItem

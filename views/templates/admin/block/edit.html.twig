@@ -1,0 +1,47 @@
+{#**
+ * 2007-2020 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0).
+ * It is also available through the world-wide-web at this URL: https://opensource.org/licenses/AFL-3.0
+ *#}
+
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col">
+            {% block contact_form %}
+                {{ form_start(Form) }}
+                <div class="card">
+                    <h3 class="card-header">
+                        <i class="material-icons">mail_outline</i>
+                        {{ 'Block'|trans({}, 'Modules.Demodoctrine.Admin') }}
+                    </h3>
+                    <div class="card-block row">
+                        <div class="card-text">
+                            {{ form_row(Form.name) }}
+                            {{ form_row(Form.listLink) }}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('kj_custommenu_item_index') }}" class="btn btn-outline-secondary">
+                            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+                        </a>
+                        <button class="btn btn-primary float-right">
+                            {{ 'Save'|trans({}, 'Admin.Actions') }}
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(Form) }}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('../modules/kj_custommenu/views/js/blocklink.js') }}"></script>
+    <script src="{{ asset('../modules/kj_custommenu/views/js/add_block.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+    {% block quotes_list_panel %}
+        <div class="row">
+            <div class="col">
+                {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': itemGrid} %}
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}
