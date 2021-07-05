@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-class ItemQueryBuilder extends AbstractDoctrineQueryBuilder
+class LinkQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     private $searchCriteriaApplicator;
 
@@ -27,9 +27,7 @@ class ItemQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('i.id, i.name, i.is_single_link,position')
-            ->addOrderBy('i.position');
-
+            ->select('i.id, i.libelle, i.url');
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
             ->applyPagination($searchCriteria, $qb)
@@ -38,7 +36,7 @@ class ItemQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    public function getCountQueryBuilder(\PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(DISTINCT i.id)');
@@ -57,13 +55,13 @@ class ItemQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $allowedFilters = [
             'id',
-            'name',
-            'is_single_link',
+            'libelle',
+            'url',
         ];
 
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'menu_item', 'i')
+            ->from($this->dbPrefix . 'menu_link', 'i')
         ;
 
         foreach ($filters as $name => $value) {
@@ -84,4 +82,5 @@ class ItemQueryBuilder extends AbstractDoctrineQueryBuilder
 
         return $qb;
     }
+
 }

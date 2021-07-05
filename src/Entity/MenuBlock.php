@@ -143,6 +143,10 @@ class MenuBlock
         $this->listLink->add($menuBlockLink);
         return $this;
     }
+    public function removeAllMenuLink(){
+        $this->listLink->clear();
+    }
+
     public function toArray()
     {
         $serializedLinks = [];

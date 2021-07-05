@@ -50,6 +50,7 @@ class MenuBlockController extends FrameworkBundleAdminController
     {
         $em = $this->get('doctrine.orm.default_entity_manager');
         $bloc = $em->getRepository('PrestaShop\Module\CustomMenu\Entity\MenuBlock')->findOneBy(['id' => $blockid]);
+        //get links of this block already registred
         $links = new ArrayCollection();
         foreach ($bloc->getListLink()  as $link) {
             $links->add($link);
@@ -57,9 +58,7 @@ class MenuBlockController extends FrameworkBundleAdminController
         $form = $this->createForm(MenuBlockType::class, $bloc)->handleRequest($request);
         if ($form->isSubmitted()) {
             foreach ($links as $link) {
-                if ($bloc->getListLink()->contains($link) === false) {
-                    $em->remove($link);
-                }
+                $em->remove($link);
             }
             $em->persist($bloc);
             $em->flush();
@@ -69,6 +68,10 @@ class MenuBlockController extends FrameworkBundleAdminController
         return $this->render('@Modules/kj_custommenu/views/templates/admin/block/edit.html.twig', [
             'Form' => $form->createView(),
         ]);
+    }
+
+    public function deleteAction(Request $request, $blockid){
+
     }
 
     private function getToolbarButtons()

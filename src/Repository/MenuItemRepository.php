@@ -9,6 +9,7 @@ use PrestaShop\Module\CustomMenu\Entity\MenuItemBlock;
 
 class MenuItemRepository extends EntityRepository
 {
+
     public function getCountItem(){
         /** @var QueryBuilder $qb */
         $qb = $this

@@ -23,7 +23,6 @@ class MenuLinkType extends AbstractType
                 'label' => 'Libéllé',
                 'constraints' => [
                     new Length([
-                        'max' => 20,
                         'maxMessage' =>(
                         'This field cannot be longer than %limit% characters'
                         ),

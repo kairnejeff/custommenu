@@ -173,13 +173,14 @@ class MenuItem
     public function toArray()
     {
         $serializedBlocks = [];
-        /** @var MenuItemBlock $listBlock  **/
-        foreach ($this->getListBlock() as $listBlock) {
-            $serializedBlocks[] = $listBlock->toArray();
-        }
         $link="";
         if($this->isIsSingleLink()){
             $link=$this->getLink()->toArray();
+        }else{
+            /** @var MenuItemBlock $listBlock  **/
+            foreach ($this->getListBlock() as $listBlock) {
+                $serializedBlocks[] = $listBlock->toArray();
+            }
         }
         return [
             'id_item' => $this->getId(),

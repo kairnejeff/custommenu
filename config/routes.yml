@@ -30,6 +30,18 @@ kj_custommenu_item_delete:
   requirements:
     itemId: \d+
 
+kj_custommenu_link_index:
+  path: /kj_custom-menu/link
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::indexAction'
+
+kj_custommenu_link_search:
+  path: /kj_custom-menu/link
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::searchAction'
+
 kj_custommenu_link_generate:
   path: /kj_custom-menu/link/generate
   methods: [GET, POST]
@@ -41,6 +53,22 @@ kj_custommenu_link_add:
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::addAction'
+
+kj_custommenu_link_edit:
+  path: /kj_custom-menu/link/{linkid}/edit
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::editAction'
+  requirements:
+    blockid: \d+
+
+kj_custommenu_link_delete:
+  path: /kj_custom-menu/link/{linkid}/delete
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShop\Module\CustomMenu\Controller\Admin\MenuLinkController::deleteAction'
+  requirements:
+    blockid: \d+
 
 kj_custommenu_block_add:
   path: /kj_custom-menu/block/add

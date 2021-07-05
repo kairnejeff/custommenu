@@ -53,6 +53,8 @@ class MenuItemController extends FrameworkBundleAdminController
         return $this->render('@Modules/kj_custommenu/views/templates/admin/edit.html.twig', [
             'layoutHeaderToolbarBtn' => $this->getToolbarAddLinkButtons(),
             'Form' => $Form->createView(),
+            "icon"=>'list',
+            'name'=>'Item'
         ]);
 
     }
@@ -89,6 +91,8 @@ class MenuItemController extends FrameworkBundleAdminController
         return $this->render('@Modules/kj_custommenu/views/templates/admin/create.html.twig', [
             'layoutHeaderToolbarBtn' => $this->getToolbarAddLinkButtons(),
             'Form' => $Form->createView(),
+            'name'=>'Item',
+            "icon"=>'list'
         ]);
 
     }
@@ -111,6 +115,11 @@ class MenuItemController extends FrameworkBundleAdminController
                 'desc' => $this->trans('Show blocks', 'Modules.kj_custommenu.Admin'),
                 'icon' => 'arrow_drop_down',
                 'href' => $this->generateUrl('kj_custommenu_block_index'),
+            ],
+            'show_link' => [
+                'desc' => $this->trans('Show Links', 'Modules.kj_custommenu.Admin'),
+                'icon' => 'arrow_drop_down',
+                'href' => $this->generateUrl('kj_custommenu_link_index'),
             ],
             'generate' => [
                 'desc' => $this->trans('Indexer pages', 'Modules.kj_custommenu.Admin'),

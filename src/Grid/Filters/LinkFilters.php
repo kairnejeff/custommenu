@@ -1,21 +1,24 @@
 <?php
+declare(strict_types=1);
 namespace PrestaShop\Module\CustomMenu\Grid\Filters;
 
-use PrestaShop\Module\CustomMenu\Grid\Definition\Factory\CustomMenuDefinitionFactory;
+use PrestaShop\Module\CustomMenu\Grid\Definition\Factory\MenuLinkDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 
-class ItemFilters extends Filters
+class LinkFilters extends Filters
 {
+    protected $filterId = MenuLinkDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */
     public static function getDefaults()
     {
         return [
-            'limit' => 10,
+            'limit' => 30,
             'offset' => 0,
-            'orderBy' => 'position',
+            'orderBy' => 'id',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

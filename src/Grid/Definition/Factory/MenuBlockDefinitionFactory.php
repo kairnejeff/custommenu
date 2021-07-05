@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 
 class MenuBlockDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'item';
+    const GRID_ID = 'block';
 
     protected function getId(){
         return self::GRID_ID;
@@ -21,7 +21,7 @@ class MenuBlockDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getName()
     {
-        return $this->trans('Items', [], 'Modules.kj_custommenu.Admin');
+        return $this->trans('Blocks', [], 'Modules.kj_custommenu.Admin');
     }
 
     /**

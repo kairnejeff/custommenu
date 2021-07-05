@@ -14,6 +14,7 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
 class Kj_CustomMenu extends Module
 {
     private $db;
+    const MENU_JSON_CACHE_KEY = 'KJ_CUSTOM_MENU_JSON';
     public function __construct() {
         $this->name = 'kj_custommenu';
         $this->author = 'Jing';
@@ -50,17 +51,117 @@ class Kj_CustomMenu extends Module
 
     public function hookDisplayTop()
     {
-       /* @var MenuItemRepository $repository */
-        $repository = $this->get('prestashop.module.kj_cutsommenu.repository.menu_item_repository');
-        $items = $repository->findBy([],array('position' => 'ASC'));
         $serializedItems = [];
-        /* @var Entity\MenuItem $item */
-        foreach ($items as $item) {
-            $serializedItems[] = $item->toArray();
+       /* @var MenuItemRepository $repository */
+
+        try {
+            $repository = $this->get('prestashop.module.kj_cutsommenu.repository.menu_item_repository');
+        } catch (Exception $e) {
+            // Catch exception in case container is not available, or service is not available
+            $repository = null;
+        }
+
+        if (!$repository) {
+            $serializedItems =$this->getConfigFieldsValues();
+            //var_dump($serializedItems);die;
+        }else{
+            $items = $repository->findBy([],array('position' => 'ASC'));
+            /* @var Entity\MenuItem $item */
+            foreach ($items as $item) {
+                $serializedItems[] = $item->toArray();
+            }
         }
         $this->smarty->assign(['items' => $serializedItems]);
 
         return $this->fetch('module:kj_custommenu/views/templates/front/menu.tpl');
+    }
+
+    protected function getConfigFieldsValues(){
+        $id_lang = $this->context->language->id;
+        $id_shop = $this->context->shop->id;
+
+        $key = self::MENU_JSON_CACHE_KEY . '_' . $id_lang . '_' . $id_shop . '.json';
+        $cacheDir = _PS_CACHE_DIR_ . 'kj_custommenu';
+        $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . $key;
+        $menu = json_decode(@file_get_contents($cacheFile), true);
+        if (!is_array($menu) || json_last_error() !== JSON_ERROR_NONE) {
+            $menu = $this->sqlGetvaribales();
+            if (!is_dir($cacheDir)) {
+                mkdir($cacheDir);
+            }
+            file_put_contents($cacheFile, json_encode($menu));
+        }
+        return $menu;
+    }
+    protected function sqlGetvaribales(){
+        $sqlSelectItem = "select * from ". _DB_PREFIX_ ."menu_item order by position";
+        $items = Db::getInstance()->executeS($sqlSelectItem);
+        foreach ($items as $index => $item){
+            $items[$index]['id_item']=$item['id'];
+            $items[$index]['name_item']=$item['name'];
+            $items[$index]['is_single']=$item['is_single_link'];
+            if(!$item['is_single_link']){
+                $items[$index]['list_block']=$this->sqlGetBlocks($item['id']);
+            }else{
+                $sqlSelectLink = $sqlSelectLinks = "select l.* from ". _DB_PREFIX_ ."menu_item as i, ". _DB_PREFIX_ ."menu_link as l 
+                           where i.link_id= l.id";
+                $link=Db::getInstance()->executeS($sqlSelectLink);
+                $items[$index]['link']['id_link'] =$link[0]['id'];
+                $items[$index]['link']['libelle_link']=$link[0]['libelle'];
+                $items[$index]['link']['url']=$link[0]['url'];
+                $items[$index]['link']['type']=$link[0]['type'];
+            }
+        }
+        return $items;
+    }
+
+    protected function sqlGetBlocks($idItem){
+        $sqlSelectBlcok = "select b.* from ". _DB_PREFIX_ ."menu_item_block as i, ". _DB_PREFIX_ ."menu_block as b 
+                            where i.block_id=b.id
+                            and i.item_id = ".$idItem ." order by position";
+        $resultat = Db::getInstance()->executeS($sqlSelectBlcok);
+        foreach ($resultat as  $index => $row){
+            $block=$this->sqlGetInfoBlock($row['id']);
+            $resultat[$index]['block']['id_block']=  $row['name'];
+            $resultat[$index]['block']['name_block']= $row['name'];
+            $resultat[$index]['block']['children']=$block['children'];
+            $resultat[$index]['block']['list_link']=$block['list_link'];
+        }
+        return $resultat;
+    }
+    protected function sqlGetInfoBlock($idBlock){
+        $sqlSelectBlcok = "select * from ". _DB_PREFIX_ ."menu_block where id = ".$idBlock;
+        $resultat = Db::getInstance()->executeS($sqlSelectBlcok);
+        $block=[];
+        $block['children']=[];
+        $block['list_link']=[];
+        $sqlSelectChildren = "select * from ". _DB_PREFIX_ ."menu_block where parent_id = ".$idBlock;
+        $childrens = Db::getInstance()->executeS($sqlSelectChildren);
+        if(!empty($childrens)){
+            foreach ($childrens as $index =>$blockChild){
+                $block['children'][$index]['list_link']= $this->sqlGetLinks($blockChild['id']);
+                $block['children'][$index]['name_block']= $blockChild['name'];
+            }
+        }else{
+            $block['list_link'] = $this->sqlGetLinks($resultat[0]['id']);
+        }
+
+        return $block;
+    }
+    protected function sqlGetLinks($idBlock){
+        $sqlSelectLinks = "select l.* from ". _DB_PREFIX_ ."menu_block_link as b, ". _DB_PREFIX_ ."menu_link as l 
+                           where b.link_id= l.id
+                           and block_id = ".$idBlock.
+                           " order by b.position";
+        $resultat =Db::getInstance()->executeS($sqlSelectLinks);
+        $links =[];
+        foreach ($resultat as $index =>$link){
+            $links[$index]['link']['id_link']=$link['id'];
+            $links[$index]['link']['libelle_link']=$link['libelle'];
+            $links[$index]['link']['url']=$link['url'];
+            $links[$index]['link']['type']=$link['type'];
+        }
+        return $links;
     }
 
     public function getContent()

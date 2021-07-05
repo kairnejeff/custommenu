@@ -4,13 +4,42 @@
 namespace PrestaShop\Module\CustomMenu\Controller\Admin;
 
 
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\Module\CustomMenu\Grid\Definition\Factory\MenuLinkDefinitionFactory;
+use PrestaShop\Module\CustomMenu\Grid\Filters\LinkFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MenuLinkController extends FrameworkBundleAdminController
 {
+    public function indexAction(Request $request,LinkFilters $filters)
+    {
+        $linkGridFactory = $this->get('prestashop.module.kj_cutsommenu.grid.factory.links');
+        $linkGrid = $linkGridFactory->getGrid($filters);
+        return $this->render(
+            '@Modules/kj_custommenu/views/templates/admin/index.html.twig',
+            [
+                'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Custom menu', 'Modules.kj_cutsommenu.Admin'),
+                'layoutHeaderToolbarBtn' => $this->getToolbarAddLinkButtons(),
+                'itemGrid' => $this->presentGrid($linkGrid),
+            ]
+        );
+    }
+
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.module.kj_cutsommenu.grid.definition.factory.links'),
+            $request,
+            MenuLinkDefinitionFactory::GRID_ID,
+            'kj_custommenu_link_index'
+        );
+    }
 
     /**
      * générer tous les links de cms pages et catégories
@@ -54,6 +83,8 @@ class MenuLinkController extends FrameworkBundleAdminController
         return $this->render('@Modules/kj_custommenu/views/templates/admin/create.html.twig', [
             'Form' => $Form->createView(),
             'layoutHeaderToolbarBtn' => $this->getToolbarAddLinkButtons(),
+            'name'=>'Link',
+            'icon'=>'insert_link'
         ]);
     }
 

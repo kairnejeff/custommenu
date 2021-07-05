@@ -13,8 +13,8 @@
     {{ form_start(Form) }}
     <div class="card">
         <h3 class="card-header">
-            <i class="material-icons">mail_outline</i>
-            {{ 'Item'|trans({}, 'Modules.Demodoctrine.Admin') }}
+            <i class="material-icons">{{ icon }}</i>
+            {{ name|trans({}, 'Modules.Demodoctrine.Admin') }}
         </h3>
         <div class="card-block row">
             <div class="card-text">
