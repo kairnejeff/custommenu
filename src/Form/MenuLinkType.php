@@ -22,11 +22,6 @@ class MenuLinkType extends AbstractType
             ->add('libelle', TextType::class, [
                 'label' => 'Libéllé',
                 'constraints' => [
-                    new Length([
-                        'maxMessage' =>(
-                        'This field cannot be longer than %limit% characters'
-                        ),
-                    ]),
                     new NotBlank(),
                 ]
             ])
