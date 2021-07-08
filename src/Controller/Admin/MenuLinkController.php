@@ -88,6 +88,30 @@ class MenuLinkController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function editAction(Request $request, $linkid)
+    {
+        $FormBuilder = $this->get('prestashop.module.kj_cutsommenu.form.identifiable_object.builder.menu_link_form_builder');
+        $Form = $FormBuilder->getFormFor((int) $linkid);
+        $Form->handleRequest($request);
+        $FormHandler = $this->get('prestashop.module.kj_cutsommenu.form.identifiable_object.handler.menu_link_form_handler');
+        $result = $FormHandler->handleFor((int) $linkid, $Form);
+
+        if ($result->isSubmitted() && $result->isValid()) {
+            $this->addFlash(
+                'success',
+                $this->trans('Successful edit.', 'Admin.Notifications.Success')
+            );
+            return $this->redirectToRoute('kj_custommenu_link_index');
+        }
+
+        return $this->render('@Modules/kj_custommenu/views/templates/admin/edit.html.twig', [
+            'Form' => $Form->createView(),
+            'layoutHeaderToolbarBtn' => $this->getToolbarAddLinkButtons(),
+            'name'=>'Link',
+            'icon'=>'insert_link'
+        ]);
+    }
+
     private function getToolbarAddLinkButtons()
     {
         return [

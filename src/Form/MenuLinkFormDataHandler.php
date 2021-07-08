@@ -45,7 +45,12 @@ class MenuLinkFormDataHandler implements FormDataHandlerInterface
 
     public function update($id, array $data)
     {
-        // TODO: Implement update() method.
+        /**@var MenuLink $link**/
+        $link = $this->repository->findOneById($id);
+        $link->setLink($data['link']);
+        $link->setLibelle($data['libelle']);
+        $this->entityManager->persist($link);
+        $this->entityManager->flush();
     }
 
 
