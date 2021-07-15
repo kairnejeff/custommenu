@@ -63,11 +63,17 @@ class MenuItemFormDataHandler implements FormDataHandlerInterface
         $item = $this->repository->findOneById($id);
         $item->setName($data['name']);
         $item->setPosition($data['position']);
-        $item->removeAllBlock();
-        $this->entityManager->persist($item);
-        $this->entityManager->flush();
-        foreach($data['listBlock'] as $block){
-            $item->addItemBlock($block);
+        if($data['is_single_link']){
+            $menuLink= $this->entityManager->getRepository('PrestaShop\Module\CustomMenu\Entity\MenuLink')->find($data['link']);
+            //$position = $this->repository->getCountItem();
+            $item->setLink($menuLink);
+        }else{
+            $item->removeAllBlock();
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();
+            foreach($data['listBlock'] as $block){
+                $item->addItemBlock($block);
+            }
         }
         $this->entityManager->persist($item);
         $this->entityManager->flush();
