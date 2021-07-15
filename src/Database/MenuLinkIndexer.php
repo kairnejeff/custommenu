@@ -104,6 +104,7 @@ class MenuLinkIndexer
 
     private function getCategories()
     {
+        dump($this->shopIds);die;
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('cc.id_category, ccl.name')
