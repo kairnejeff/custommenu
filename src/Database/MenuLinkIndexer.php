@@ -62,12 +62,10 @@ class MenuLinkIndexer
     {
         //$this->removeAllPagesNoCustom();
         //indexder categories pages
+        $this->removeAllPagesNoCustom();
         $categories= $this->getCategories();
         foreach ($categories as $category) {
-            if($memuLink = $this->entityManager->getRepository('PrestaShop\Module\CustomMenu\Entity\MenuLink')->findOneBy(array('libelle'=>$category['name']))){
-            }else{
-                $memuLink= new MenuLink();
-            }
+            $memuLink= new MenuLink();
             $memuLink->setLibelle($category['name']);
             $memuLink->setLink($this->linkMaker->getCategoryLink((int)$category['id_category']));
             $memuLink->setType('category');
