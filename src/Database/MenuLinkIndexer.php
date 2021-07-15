@@ -63,7 +63,6 @@ class MenuLinkIndexer
         //$this->removeAllPagesNoCustom();
         //indexder categories pages
         $categories= $this->getCategories();
-        dump($categories);die;
         foreach ($categories as $category) {
             if($memuLink = $this->entityManager->getRepository('PrestaShop\Module\CustomMenu\Entity\MenuLink')->findOneBy(array('libelle'=>$category['name']))){
             }else{
