@@ -62,10 +62,12 @@ class MenuLinkIndexer
     {
         //$this->removeAllPagesNoCustom();
         //indexder categories pages
-        $this->removeAllPagesNoCustom();
         $categories= $this->getCategories();
         foreach ($categories as $category) {
-            $memuLink= new MenuLink();
+            if($memuLink = $this->entityManager->getRepository('PrestaShop\Module\CustomMenu\Entity\MenuLink')->findOneBy(array('libelle'=>$category['name']))){
+            }else{
+                $memuLink= new MenuLink();
+            }
             $memuLink->setLibelle($category['name']);
             $memuLink->setLink($this->linkMaker->getCategoryLink((int)$category['id_category']));
             $memuLink->setType('category');
@@ -75,7 +77,10 @@ class MenuLinkIndexer
         //indexder CMS pages
         $pages = $this ->getCmsPages();
         foreach ($pages as $page) {
-            $memuLink= new MenuLink();
+            if($memuLink = $this->entityManager->getRepository('PrestaShop\Module\CustomMenu\Entity\MenuLink')->findOneBy(array('libelle'=>$page['meta_title']))){
+            }else{
+                $memuLink= new MenuLink();
+            }
             $memuLink->setLibelle($page['meta_title']);
             $memuLink->setLink($this->linkMaker->getCategoryLink((int)$page['id_cms']));
             $memuLink->setType('cms');
