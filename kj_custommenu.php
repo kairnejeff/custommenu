@@ -71,9 +71,53 @@ class Kj_CustomMenu extends Module
                 $serializedItems[] = $item->toArray();
             }
         }
-        $this->smarty->assign(['items' => $serializedItems]);
+        $this->smarty->assign(['items' => $this->getCurrentPageIdentifier($serializedItems)]);
 
         return $this->fetch('module:kj_custommenu/views/templates/front/menu.tpl');
+    }
+
+    private function getCurrentPageIdentifier($serializedItems)
+    {
+        $current= "index";
+        $controllerName = Dispatcher::getInstance()->getController();
+        if ($controllerName === 'cms' && ($id = Tools::getValue('id_cms'))) {
+            $current= $this->context->link->getCMSLink(new CMS($id,$this->context->language->id));
+        } else if ($controllerName === 'category' && ($id = Tools::getValue('id_category'))) {
+            $current= $this->context->link->getCategoryLink($id);
+        } else if ($controllerName === 'cms' && ($id = Tools::getValue('id_cms_category'))) {
+            $current= $this->context->link->getCMSCategoryLink(new CMSCategory($id));
+        }  else if ($controllerName === 'product' && ($id = Tools::getValue('id_product'))) {
+            $current= $this->context->link->getProductLink(new Product($id));
+        } else if($controllerName === 'search' && ($tag = Tools::getValue('tag'))){
+            $current =$this->context->link->getPageLink($controllerName,null,$this->context->language->id,array("tag"=>$tag) ) ;
+        }
+        foreach ($serializedItems as $index =>  $item){
+            if($item['is_single']){
+                if($item['link']['url']==$current){
+                    $serializedItems[$index]['link']['current']=true;
+                }
+            }else{
+                foreach ($item['list_block']  as $indexListBlock => $block) {
+
+                    if (sizeof($block['block']['children'])!=0){
+                        foreach ($block['block']['children'] as $indexBlockChild => $block){
+                            foreach ($block['list_link']  as $indexLink => $Childlink){
+                                if(strcmp($Childlink['link']['url'],$current)==0) {
+                                    $serializedItems[$index]['list_block'][$indexListBlock]['block']['children'][$indexBlockChild]['list_link'][$indexLink]['link']['current'] = true;
+                                }
+                            }
+                        }
+                    }else{
+                        foreach ($block['block']['list_link'] as $indexLink => $link){
+                            if(strcmp($link['link']['url'],$current)==0){
+                                $serializedItems[$index]['list_block'][$indexListBlock]['block']['list_link'][$indexLink]['link']['current']=true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $serializedItems;
     }
 
     protected function getConfigFieldsValues(){

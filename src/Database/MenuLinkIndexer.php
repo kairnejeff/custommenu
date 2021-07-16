@@ -2,6 +2,7 @@
 
 namespace PrestaShop\Module\CustomMenu\Database;
 
+use CMS;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -82,7 +83,7 @@ class MenuLinkIndexer
                 $memuLink= new MenuLink();
             }
             $memuLink->setLibelle($page['meta_title']);
-            $memuLink->setLink($this->linkMaker->getCategoryLink((int)$page['id_cms']));
+            $memuLink->setLink($this->linkMaker->getCMSLink(new CMS((int)$page['id_cms'],$this->idLang)));
             $memuLink->setType('cms');
             $this->entityManager->persist($memuLink);
         }

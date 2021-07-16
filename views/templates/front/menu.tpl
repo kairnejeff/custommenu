@@ -15,9 +15,9 @@
                                         <ul class="menu-block-child-link">
                                             {foreach from=$block.list_link item=link}
                                                 {if $link.link.type=='custom'}
-                                                    <i><span class="obflink" data-o="{base64_encode($link.link.url)}">{$link.link.libelle_link}</span></i>
+                                                    <i><span  data-o="{base64_encode($link.link.url)} class="obflink {if isset($link.link.current)}{$link.link.current}{/if}">{$link.link.libelle_link}</span></i>
                                                 {else}
-                                                    <i><a href="{$link.link.url}">{$link.link.libelle_link}</a></i>
+                                                    <i><a href="{$link.link.url} class="menulink {if isset($link.link.current)}{$link.link.current}{/if}">{$link.link.libelle_link}</a></i>
                                                 {/if}
 
                                             {/foreach}
@@ -27,7 +27,7 @@
                             {else}
                                 <ul class="menu-block-link">
                                     {foreach from=$block.block.list_link item=link}
-                                        <i><a href="{$link.link.url}">{$link.link.libelle_link}</a></i>
+                                        <i><a href="{$link.link.url}" class="menulink {if isset($link.link.current)}{$link.link.current}{/if}">{$link.link.libelle_link}</a></i>
                                     {/foreach}
                                 </ul>
                             {/if}
@@ -35,7 +35,7 @@
                 {/foreach}
                 </div>
             {else}
-                <span class="menu-item-title"><a href="{$item.link.url}">{$item.name_item}</a></span>
+                <span class="menu-item-title"><a href="{$item.link.url}" class="menulink {if isset($item.link.current)}{$item.link.current}{/if}">{$item.name_item}</a></span>
             {/if}
         </li>
     {/foreach}
