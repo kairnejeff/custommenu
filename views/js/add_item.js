@@ -8,7 +8,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $collectionHolder = $('#menu_item_listBlock');
     $collectionHolder.append($addNewItem);
-    $collectionHolder.data('menu_item_listBlock', $collectionHolder.find('.panel').length)
+    $collectionHolder.data('index', $collectionHolder.children('.form-group').length)
     $collectionHolder.find('.panel').each(function () {
         addRemoveButton($(this));
     });

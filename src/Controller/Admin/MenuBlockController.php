@@ -56,10 +56,13 @@ class MenuBlockController extends FrameworkBundleAdminController
             $links->add($link);
         }
         $form = $this->createForm(MenuBlockType::class, $bloc)->handleRequest($request);
+
         if ($form->isSubmitted()) {
+            //remove the blocklinks already registred
             foreach ($links as $link) {
                 $em->remove($link);
             }
+
             $em->persist($bloc);
             $em->flush();
             return $this->redirectToRoute('kj_custommenu_block_index');
