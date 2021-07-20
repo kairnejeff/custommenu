@@ -148,7 +148,7 @@ class Kj_CustomMenu extends Module
                 $items[$index]['list_block']=$this->sqlGetBlocks($item['id']);
             }else{
                 $sqlSelectLink = $sqlSelectLinks = "select l.* from ". _DB_PREFIX_ ."menu_item as i, ". _DB_PREFIX_ ."menu_link as l 
-                           where i.link_id= l.id";
+                           where i.link_id= l.id and i.link_id=".$item['link_id'];
                 $link=Db::getInstance()->executeS($sqlSelectLink);
                 $items[$index]['link']['id_link'] =$link[0]['id'];
                 $items[$index]['link']['libelle_link']=$link[0]['libelle'];
