@@ -102,14 +102,14 @@ class Kj_CustomMenu extends Module
                     if (sizeof($block['block']['children'])!=0){
                         foreach ($block['block']['children'] as $indexBlockChild => $block){
                             foreach ($block['list_link']  as $indexLink => $Childlink){
-                                if(strcmp($Childlink['link']['url'],$current)==0) {
+                                if(strcmp(urlencode($Childlink['link']['url']),$current)==0) {
                                     $serializedItems[$index]['list_block'][$indexListBlock]['block']['children'][$indexBlockChild]['list_link'][$indexLink]['link']['current'] = true;
                                 }
                             }
                         }
                     }else{
                         foreach ($block['block']['list_link'] as $indexLink => $link){
-                            if(strcmp($link['link']['url'],$current)==0){
+                            if(strcmp(urlencode($link['link']['url'],$current))==0){
                                 $serializedItems[$index]['list_block'][$indexListBlock]['block']['list_link'][$indexLink]['link']['current']=true;
                             }
                         }
