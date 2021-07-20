@@ -109,7 +109,7 @@ class Kj_CustomMenu extends Module
                         }
                     }else{
                         foreach ($block['block']['list_link'] as $indexLink => $link){
-                            if(strcmp(urlencode($link['link']['url'],$current))==0){
+                            if(strcmp(urlencode($link['link']['url']),$current)==0){
                                 $serializedItems[$index]['list_block'][$indexListBlock]['block']['list_link'][$indexLink]['link']['current']=true;
                             }
                         }
