@@ -94,7 +94,7 @@ class Kj_CustomMenu extends Module
         foreach ($serializedItems as $index =>  $item){
             if($item['is_single']){
                 if($item['link']['url']==$current){
-                    $serializedItems[$index]['link']['current']=true;
+                    $serializedItems[$index]['current']=true;
                 }
             }else{
                 foreach ($item['list_block']  as $indexListBlock => $block) {
@@ -104,6 +104,7 @@ class Kj_CustomMenu extends Module
                             foreach ($block['list_link']  as $indexLink => $Childlink){
                                 if(strcmp(str_replace('%20','+',$Childlink['link']['url']),$current)==0) {
                                     $serializedItems[$index]['list_block'][$indexListBlock]['block']['children'][$indexBlockChild]['list_link'][$indexLink]['link']['current'] = true;
+                                    $serializedItems[$index]['current']=true;
                                 }
                             }
                         }
@@ -111,6 +112,7 @@ class Kj_CustomMenu extends Module
                         foreach ($block['block']['list_link'] as $indexLink => $link){
                             if(strcmp(str_replace('%20','+',$link['link']['url']),$current)==0){
                                 $serializedItems[$index]['list_block'][$indexListBlock]['block']['list_link'][$indexLink]['link']['current']=true;
+                                $serializedItems[$index]['current']=true;
                             }
                         }
                     }
