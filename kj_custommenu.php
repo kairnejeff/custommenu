@@ -91,6 +91,9 @@ class Kj_CustomMenu extends Module
         } else if($controllerName === 'search' && ($tag = Tools::getValue('tag'))){
             $current =$this->context->link->getPageLink($controllerName,null,$this->context->language->id,array("tag"=>$tag) ) ;
         }
+        else if($controllerName === 'stores'){
+            $current =$this->context->link->getBaseLink().$this->l('stores') ;
+        }
         foreach ($serializedItems as $index =>  $item){
             if($item['is_single']){
                 if($item['link']['url']==$current){
